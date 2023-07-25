@@ -1,0 +1,6 @@
+#!/bin/sh -ex
+#
+# Update the master branch from upstream.  The master branch still needs to be
+# merged into develop.
+#
+git fetch upstream master:master
