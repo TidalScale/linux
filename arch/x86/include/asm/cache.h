@@ -13,7 +13,7 @@
 #define INTERNODE_CACHE_SHIFT CONFIG_X86_INTERNODE_CACHE_SHIFT
 #define INTERNODE_CACHE_BYTES (1 << INTERNODE_CACHE_SHIFT)
 
-#ifdef CONFIG_X86_VSMP
+#if defined(CONFIG_X86_VSMP) || defined(CONFIG_X86_HPE_SCS)
 #ifdef CONFIG_SMP
 #define __cacheline_aligned_in_smp					\
 	__attribute__((__aligned__(INTERNODE_CACHE_BYTES)))		\

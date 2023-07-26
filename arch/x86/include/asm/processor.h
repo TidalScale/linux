@@ -48,11 +48,11 @@ struct vm86;
 #define HBP_NUM 4
 
 /*
- * These alignment constraints are for performance in the vSMP case,
+ * These alignment constraints are for performance in the vSMP/SCS case,
  * but in the task_struct case we must also meet hardware imposed
  * alignment requirements of the FPU state:
  */
-#ifdef CONFIG_X86_VSMP
+#if defined(CONFIG_X86_VSMP) || defined(CONFIG_X86_HPE_SCS)
 # define ARCH_MIN_TASKALIGN		(1 << INTERNODE_CACHE_SHIFT)
 # define ARCH_MIN_MMSTRUCT_ALIGN	(1 << INTERNODE_CACHE_SHIFT)
 #else

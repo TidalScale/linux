@@ -5,6 +5,7 @@
 
 choice
 	prompt "Timer frequency"
+        default HZ_100 if X86_HPE_SCS
 	default HZ_250
 	help
 	 Allows the configuration of the timer frequency. It is customary

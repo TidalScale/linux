@@ -312,7 +312,7 @@ config X86_GENERIC
 # Define implied options from the CPU selection here
 config X86_INTERNODE_CACHE_SHIFT
 	int
-	default "12" if X86_VSMP
+	default "12" if X86_VSMP || X86_HPE_SCS
 	default X86_L1_CACHE_SHIFT
 
 config X86_L1_CACHE_SHIFT

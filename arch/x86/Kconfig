@@ -186,8 +186,8 @@ config X86
 	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
 	select HAVE_ARCH_STACKLEAK
 	select HAVE_ARCH_TRACEHOOK
-	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
-	select HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD if X86_64
+	select HAVE_ARCH_TRANSPARENT_HUGEPAGE   if !X86_HPE_SCS
+	select HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD if X86_64 && !X86_HPE_SCS
 	select HAVE_ARCH_USERFAULTFD_WP         if X86_64 && USERFAULTFD
 	select HAVE_ARCH_USERFAULTFD_MINOR	if X86_64 && USERFAULTFD
 	select HAVE_ARCH_VMAP_STACK		if X86_64
@@ -566,6 +566,18 @@ config X86_VSMP
 	  Support for ScaleMP vSMP systems.  Say 'Y' here if this kernel is
 	  supposed to run on these EM64T-based machines.  Only choose this option
 	  if you have one of these machines.
+
+config X86_HPE_SCS
+	bool "HPE Scalable Compute Software"
+	select HYPERVISOR_GUEST
+	select PARAVIRT
+	depends on X86_64 && PCI
+	depends on X86_EXTENDED_PLATFORM
+	depends on SMP
+	help
+	  Support for Hewlett Packard Enterprise Scalable Compute Software systems.
+          Say 'Y' here if this kernel is intended to run on these software-defined
+          servers.  Only choose this option if you have one of these systems.
 
 config X86_UV
 	bool "SGI Ultraviolet"
