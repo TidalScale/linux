@@ -29,6 +29,10 @@
 
 #include <asm/irq_regs.h>
 
+#ifdef CONFIG_X86_HPE_SCS
+#include <asm/hpescs.h>
+#endif
+
 #include "tick-internal.h"
 
 #include <trace/events/timer.h>
@@ -115,7 +119,17 @@ static void tick_do_update_jiffies64(ktime_t now)
 	}
 
 	/* Advance jiffies to complete the jiffies_seq protected job */
+#ifdef CONFIG_X86_HPE_SCS
+        static bool jiffies_setup_done = false;
+
+        if (!jiffies_setup_done) {
+                hpe_scs_setup_jiffies(jiffies_64 + ticks, rdtsc());
+                jiffies_setup_done = true;
+        }
+	jiffies_64 += ticks; /* Temporary until the hyperkernel handles it. */
+#else
 	jiffies_64 += ticks;
+#endif
 
 	/*
 	 * Keep the tick_next_period variable up to date.
