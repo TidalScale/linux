@@ -120,16 +120,24 @@ static void tick_do_update_jiffies64(ktime_t now)
 
 	/* Advance jiffies to complete the jiffies_seq protected job */
 #ifdef CONFIG_X86_HPE_SCS
-        static bool jiffies_setup_done = false;
+        /*
+         * See if the hyperkernel will update jiffies for us,
+         * saving lots of cross-node page movement.
+         */
+        static int paravirt_jiffies = -1;
 
-        if (!jiffies_setup_done) {
-                hpe_scs_setup_jiffies(jiffies_64 + ticks, rdtsc());
-                jiffies_setup_done = true;
+        if (paravirt_jiffies == -1) {
+                if (hpe_scs_setup_jiffies(jiffies_64 + ticks, rdtsc()))
+                        paravirt_jiffies = 1;
+                else
+                        paravirt_jiffies = 0;
+                printk("HPE SCS: paravirt jiffies %ssupported\n",
+                        (paravirt_jiffies) ? "" : "not ");
         }
-	jiffies_64 += ticks; /* Temporary until the hyperkernel handles it. */
-#else
-	jiffies_64 += ticks;
+
+        if (!paravirt_jiffies)
 #endif
+	jiffies_64 += ticks;
 
 	/*
 	 * Keep the tick_next_period variable up to date.

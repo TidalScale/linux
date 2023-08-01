@@ -61,5 +61,6 @@ hpe_scs_setup_jiffies(u64 jiffies, u64 tsc)
 
         vmcall(&registers);
 
-	return 0;
+        /* The hyperkernel sets rax to 1 if paravirt jiffies is supported. */
+	return (registers.rax == 1);
 }
